@@ -252,6 +252,39 @@ router.route("/mobile-agent-connection").get(async (req, res) => {
 });
 /*                                 page render                                 */
 
+/*                                 SP render                                 */
+app.get("/signup_with_idp", function(req, res) {
+  res.render("index.pug");
+});
+app.get("/service", isAuthenticated, function(req, res) {
+  res.render("service.pug", { user: req.session.user.user_email });
+});
+app.post('/redirect', (req, res) => {
+  // Redirect to App 3003's specific route
+  if (req.session.user) {
+    console.log("INSIDE SERVICE REDIRECT CONDITION")
+    res.redirect("/service");
+  }
+  res.redirect(redirectURL);
+});
+
+app.get("/callback", (req, res) => {
+  const queryString = req.query;
+  const data = Object.fromEntries(new URLSearchParams(queryString));
+  const receivedHmac = data.hmac;
+  delete data.hmac; // Remove HMAC from data to calculate HMAC again
+
+  console.log(data);
+  console.log(verifyHmac(data, receivedHmac));
+  if (data.did && data.email && verifyHmac(data, receivedHmac)) {
+    req.session.user = { user_email: data.email };
+    res.redirect("/service");
+  } else {
+    res.send("Tampered data");
+  }
+});
+
+/*                                 SP render                                 */
 router
   .route("/references")
   .get(async (req, res) => {

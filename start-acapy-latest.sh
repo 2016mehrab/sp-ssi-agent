@@ -17,14 +17,14 @@ SEED="eshan000000000000000000000000000"
 # Docker --seed fakeMehrab0000000000000000000000 \
 # Define the command
 CMD="aca-py start  --endpoint $AGENT_TUNNEL \
-   --label basic-idp \
+   --label sp \
    --inbound-transport http 0.0.0.0 8020 \
    --outbound-transport http \
    --admin 0.0.0.0 8021 \
    --admin-insecure-mode \
+   --wallet-name SPWallet \
    --wallet-type askar \
-   --wallet-name IDPWALLET \
-   --wallet-key idpwalletsecret \
+   --wallet-key spwalletsecret \
    --recreate-wallet
    --preserve-exchange-records \
    --genesis-url http://test.bcovrin.vonx.io/genesis \
